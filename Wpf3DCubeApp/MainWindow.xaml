@@ -17,10 +17,14 @@
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="camera" LookDirection="0, 0, -3.5">
                     <PerspectiveCamera.Position>
-                        <Point3D X="0.5" Y="0.5" Z="3.5" />
+                        <Point3D
+                            X="0.5"
+                            Y="0.5" Z="3.5">
+                        </Point3D>
                     </PerspectiveCamera.Position>
                 </PerspectiveCamera>
             </Viewport3D.Camera>
+            
             <Viewport3D.Children>
                 <ModelVisual3D>
                     <ModelVisual3D.Content>
@@ -66,12 +70,35 @@
                                     <AxisAngleRotation3D x:Name="rotateY" Axis="1,0,0" Angle="30"/>
                                 </RotateTransform3D.Rotation>
                             </RotateTransform3D>
+                            <TranslateTransform3D x:Name="moveX" OffsetY="0"/>
+                            <ScaleTransform3D x:Name="scale" ScaleX="1"/>
                         </Transform3DGroup>
-                        
-                        
                     </ModelVisual3D.Transform>
                 </ModelVisual3D>
             </Viewport3D.Children>
+            
+            <Viewport3D.Triggers>
+                <EventTrigger RoutedEvent="Viewport3D.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <Point3DAnimationUsingKeyFrames
+                                Storyboard.TargetName="camera"
+                                Storyboard.TargetProperty="Position">
+                                <LinearPoint3DKeyFrame Value="0, 0.5, 3.5" KeyTime="0:0:3"/>
+                                <LinearPoint3DKeyFrame Value="-0.4, 0.5, 3.3" KeyTime="0:0:6"/>
+                                <LinearPoint3DKeyFrame Value="-0.9, 0.5, 3.9" KeyTime="0:0:9"/>
+                            </Point3DAnimationUsingKeyFrames>
+                            <Vector3DAnimationUsingKeyFrames
+                                Storyboard.TargetName="camera"
+                                Storyboard.TargetProperty="LookDirection">
+                                <LinearVector3DKeyFrame Value="0.1, 0.5, -3.5" KeyTime="0:0:3"/>
+                                <LinearVector3DKeyFrame Value="0.6, 0.2, -3.5" KeyTime="0:0:6"/>
+                                <LinearVector3DKeyFrame Value="1.2, 0.2, -3.5" KeyTime="0:0:9"/>
+                            </Vector3DAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Viewport3D.Triggers>
         </Viewport3D>
         <StackPanel Grid.Column="2">
             <Slider
@@ -83,11 +110,19 @@
                 Minimum="0" 
                 Maximum="360"
                 Value="{Binding ElementName=rotateY, Path=Angle}" />
-            <Slider 
-                Minimum="-10" 
-                Maximum="10"
-                Value="{Binding ElementName=camera, Path=LookDirection.X}" />
+            <Slider
+                x:Name="cameraX"
+                Minimum="-10.0" 
+                Maximum="10.0"
+                Value="{Binding OffsetY, ElementName=moveX}"/>
+            <Slider
+                Minimum="-10.0" 
+                Maximum="10.0"
+                Value="{Binding ScaleX, ElementName=scale}"/>
+            <Slider
+               Minimum="-10.0" 
+               Maximum="10.0"
+               Value="{Binding LookDirection.Y, ElementName=camera}"/>
         </StackPanel>
-        
     </Grid>
 </Window>
